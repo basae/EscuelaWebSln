@@ -37,8 +37,8 @@ namespace EscuelaWeb
             
             CargaDependenciasNegocio(services);   
             
-            services.AddScoped<EscuelaDatos, EscuelaDatos>();
-            services.AddScoped<DireccionDatos, DireccionDatos>();
+            services.AddScoped<IEscuelaDatos, EscuelaDatos>();
+            services.AddScoped<IDireccionDatos, DireccionDatos>();
                                 
         }
 

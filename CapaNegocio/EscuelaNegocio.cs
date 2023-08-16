@@ -8,11 +8,11 @@ namespace CapaNegocio
 {
     public class EscuelaNegocio
     {
-        private readonly EscuelaDatos escuelaDatos;
-        private readonly DireccionNegocio direccionNegocio;
+        private readonly IEscuelaDatos escuelaDatos;
+        private readonly IDireccionDatos direccionNegocio;
         private readonly IConexionBaseTransaction context;
 
-        public EscuelaNegocio(EscuelaDatos escuelaDatos, DireccionNegocio direccionNegocio, IConexionBaseTransaction context)
+        public EscuelaNegocio(IEscuelaDatos escuelaDatos, IDireccionDatos direccionNegocio, IConexionBaseTransaction context)
         {
             this.escuelaDatos = escuelaDatos;
             this.direccionNegocio = direccionNegocio;
@@ -20,7 +20,7 @@ namespace CapaNegocio
         }
         public RespuestaServicio<Escuela> Guardar(Escuela escuela)
         {
-            RespuestaServicio<Escuela> respuesta = new ();
+            RespuestaServicio<Escuela> respuesta = new();
             try
             {
                 if (escuela is null)

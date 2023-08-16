@@ -8,17 +8,22 @@ using System.Threading.Tasks;
 
 namespace Modelos
 {
-    public class Alumno :Persona
-    {        
-        public string NoControl { get; set; }
+    public class Alumno : Persona,IDatosControl
+    {
+        public int? NoControl { get; set; }
         public Catalogo Grado { get; set; }
         public Catalogo Grupo { get; set; }
-        public Catalogo Turno { get; set; }        
+        public Catalogo Turno { get; set; }
+        public Catalogo EstadoReg { get; set; } = new Catalogo();
+        public DateTime? FechaModificacion { get; set; }
+        public DateTime FechaRegistro { get; set; }
+
         public Alumno()
         {
             Grado = new();
             Grupo = new();
             Turno = new();
-        }        
+        }
+
     }
 }

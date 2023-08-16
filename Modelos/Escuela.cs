@@ -17,6 +17,7 @@ namespace Modelos
         public string Telefono { get; set; }
         public Direccion Direccion { get; set; } = new Direccion();
         public Catalogo EstadoReg { get; set; } = new Catalogo();
+        public Usuario Usuario { get; set; } = new Usuario();
 
     }
 }

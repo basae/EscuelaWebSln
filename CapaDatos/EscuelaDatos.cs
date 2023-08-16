@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CapaDatos
 {
-    public class EscuelaDatos
+    public class EscuelaDatos : IEscuelaDatos
     {
         private IConexionBase conexionBD;
         public EscuelaDatos(IConexionBase conexion)
@@ -44,6 +44,36 @@ namespace CapaDatos
             }
             return respuesta;
         }
+        public RespuestaServicio<int?> Modificar(Escuela escuela)
+        {
+            RespuestaServicio<int?> respuesta = new RespuestaServicio<int?>();
+            try
+            {
+                Dictionary<string, object> parameter = new Dictionary<string, object>();
+                parameter.Add("@Id", escuela.Id);
+                parameter.Add("@Clave", escuela.Clave);
+                parameter.Add("@Nombre", escuela.Nombre);
+                parameter.Add("@Id_Direccion", escuela.Direccion.Id);
+                parameter.Add("@AnioRegistro", escuela.Anioregistro);
+                parameter.Add("@Id_Nivel_Educativo", escuela.NivelEducativo.Id);
+                parameter.Add("@Telefono", escuela.Telefono);
+                parameter.Add("@Cve_Estatus", escuela.EstadoReg.Id);
+
+                DataTable dt = conexionBD.ExeStoreProcedure("sp_escuela_upd", parameter);
+                if (dt.Rows.Count > 0)
+                {
+                    respuesta.Result = dt.Rows[0].Field<int>(0);
+                }
+                else
+                    throw new Exception("algo ocurrio en la actualización, revisalo con el área de sistemas.");
+            }
+            catch (Exception ex)
+            {
+                respuesta.Error = true;
+                respuesta.Message = ex.Message;
+            }
+            return respuesta;
+        }
         public RespuestaServicio<Escuela> Obtener(int id_escuela)
         {
             RespuestaServicio<Escuela> respuesta = new();
@@ -69,7 +99,7 @@ namespace CapaDatos
                                         }).Single();
                 }
                 else
-                    throw new Exception("algo ocurrio en la inserción, revisalo con el área de sistemas.");
+                    throw new Exception("algo ocurrio en la consulta, revisalo con el área de sistemas.");
             }
             catch (Exception ex)
             {
