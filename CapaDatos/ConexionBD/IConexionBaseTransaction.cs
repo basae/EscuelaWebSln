@@ -1,9 +1,12 @@
-﻿namespace CapaDatos.ConexionBD
+﻿using System.Collections.Generic;
+using System.Data;
+
+namespace CapaDatos.ConexionBD
 {
     public interface IConexionBaseTransaction
     {
         void CommitTransaccion();
-        void CrearTransaccion();
+        void CrearTransaccion();        
         void RollBack();
     }
 }

@@ -21,8 +21,19 @@ namespace Modelos.Generico
         public Catalogo Municipio { get; set; } = new Catalogo();
         public Catalogo Estado { get; set; } = new Catalogo();
         public Catalogo Colonia { get; set; } = new Catalogo();
-    }    
-    public class Direccion : DireccionGenerica,IDireccionGenerica
+    }
+
+    public interface IDireccion: IDireccionGenerica
+    {
+        string Calle { get; set; }
+        int? Id { get; set; }
+        decimal Lat { get; set; }
+        decimal Lng { get; set; }
+        string NoExt { get; set; }
+        string NoInt { get; set; }
+    }
+
+    public class Direccion : DireccionGenerica, IDireccionGenerica, IDireccion
     {
 
         public int? Id { get; set; }
@@ -42,7 +53,7 @@ namespace Modelos.Generico
             NoInt = dr.Field<string>("NoInt");
             CodigoPostal = dr.Field<string>("CodigoPostal");
             Colonia = new Catalogo(dr.Field<string>("Colonia_Id"), dr.Field<string>("Colonia_Desc"));
-            Municipio= new Catalogo(dr.Field<string>("Municipio_Id"), dr.Field<string>("Municipio_Desc"));
+            Municipio = new Catalogo(dr.Field<string>("Municipio_Id"), dr.Field<string>("Municipio_Desc"));
             Estado = new Catalogo(dr.Field<string>("Estado_Id"), dr.Field<string>("Estado_Desc"));
 
         }

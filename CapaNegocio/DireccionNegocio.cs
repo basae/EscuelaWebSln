@@ -1,5 +1,6 @@
 ﻿using CapaDatos;
 using Modelos.Generico;
+using Modelos.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +11,14 @@ namespace CapaNegocio
 {
     public class DireccionNegocio : IDireccionNegocio
     {
-        private readonly DireccionDatos direccionDatos;
+        private readonly IDireccionDatos direccionDatos;
 
-        public DireccionNegocio(DireccionDatos direccionDatos)
+        public DireccionNegocio(IDireccionDatos direccionDatos)
         {
             this.direccionDatos = direccionDatos;
         }
 
-        public RespuestaServicio<int?> Guardar(Direccion direccion)
+        public async Task<RespuestaServicio<int?>> Guardar(Direccion direccion)
         {
             RespuestaServicio<int?> respuesta = new RespuestaServicio<int?>();
             try

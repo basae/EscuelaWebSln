@@ -17,7 +17,7 @@ namespace CapaDatos
         {
             conexionBD = conexion;
         }
-        public RespuestaServicio<int?> Guardar(Escuela escuela)
+        public async Task<RespuestaServicio<int?>> Guardar(Escuela escuela)
         {
             RespuestaServicio<int?> respuesta = new RespuestaServicio<int?>();
             try
@@ -28,7 +28,9 @@ namespace CapaDatos
                 parameter.Add("@Id_Direccion", escuela.Direccion.Id);
                 parameter.Add("@AnioRegistro", escuela.Anioregistro);
                 parameter.Add("@Id_Nivel_Educativo", escuela.NivelEducativo.Id);
-                parameter.Add("@Telefono", escuela.Telefono);
+                parameter.Add("@Id_Contacto", escuela.Contacto.Id);
+                parameter.Add("@Id_Usuario", escuela.Usuario.Id);
+
                 DataTable dt = conexionBD.ExeStoreProcedure("sp_escuela_ins", parameter);
                 if (dt.Rows.Count > 0)
                 {
@@ -56,7 +58,6 @@ namespace CapaDatos
                 parameter.Add("@Id_Direccion", escuela.Direccion.Id);
                 parameter.Add("@AnioRegistro", escuela.Anioregistro);
                 parameter.Add("@Id_Nivel_Educativo", escuela.NivelEducativo.Id);
-                parameter.Add("@Telefono", escuela.Telefono);
                 parameter.Add("@Cve_Estatus", escuela.EstadoReg.Id);
 
                 DataTable dt = conexionBD.ExeStoreProcedure("sp_escuela_upd", parameter);
@@ -74,7 +75,7 @@ namespace CapaDatos
             }
             return respuesta;
         }
-        public RespuestaServicio<Escuela> Obtener(int id_escuela)
+        public async Task<RespuestaServicio<Escuela>> Obtener(int id_escuela)
         {
             RespuestaServicio<Escuela> respuesta = new();
             try
@@ -82,21 +83,58 @@ namespace CapaDatos
                 Dictionary<string, object> parameter = new Dictionary<string, object>();
                 parameter.Add("@id_escuela", id_escuela);
 
-                DataSet ds = conexionBD.ExeStoreProcedureDataSet("sp_escuela_sel_by_id", parameter);
-                if (ds.Tables.Count > 0)
+                DataTable dt = conexionBD.ExeStoreProcedure("sp_escuela_sel_by_id", parameter);
+                if (dt.Rows.Count > 0)
                 {
-                    respuesta.Result = (from dt in ds.Tables[0].Rows.Cast<DataRow>()
+                    respuesta.Result = (from r in dt.Rows.Cast<DataRow>()
                                         select new Escuela
                                         {
-                                            Id = dt.Field<int?>("Id"),
-                                            Clave = dt.Field<string>("Clave"),
-                                            Nombre = dt.Field<string>("Nombre"),
-                                            Direccion = new Direccion(ds.Tables[1]),
-                                            Anioregistro = dt.Field<DateTime?>("AnioRegistro"),
-                                            NivelEducativo = new Catalogo(dt.Field<string>("Id_Nivel_Educativo"), dt.Field<string>("NivelEducativo_Desc")),
-                                            Telefono = dt.Field<string>("Telefono"),
-                                            EstadoReg = new Catalogo(dt.Field<string>("Cve_EstadoReg"), dt.Field<string>("EstadoReg_Desc"))
+                                            Id = r.Field<int?>("Id"),
+                                            Clave = r.Field<string>("Clave"),
+                                            Nombre = r.Field<string>("Nombre"),
+                                            Direccion = new Direccion { Id = r.Field<int?>("Id_Direccion") },
+                                            Anioregistro = r.Field<DateTime?>("AnioRegistro"),
+                                            NivelEducativo = new Catalogo(r.Field<string>("Id_Nivel_Educativo"), r.Field<string>("NivelEducativo_Desc")),
+                                            EstadoReg = new Catalogo(r.Field<string>("Cve_EstadoReg"), r.Field<string>("EstadoReg_Desc")),
+                                            FechaRegistro = r.Field<DateTime>("FechaRegistro"),
+                                            FechaModificacion = r.Field<DateTime?>("FechaModificacion"),
+                                            Usuario = new Usuario { Id = r.Field<int?>("Id_usuario") },
+                                            Contacto = new Contacto { Id = r.Field<int?>("Id_Contacto") }
                                         }).Single();
+                }
+                else
+                    throw new Exception("algo ocurrio en la consulta, revisalo con el área de sistemas.");
+            }
+            catch (Exception ex)
+            {
+                respuesta.Error = true;
+                respuesta.Message = ex.Message;
+            }
+            return respuesta;
+        }
+        public async Task<RespuestaServicio<IEnumerable<Escuela>>> Obtener()
+        {
+            RespuestaServicio<IEnumerable<Escuela>> respuesta = new();
+            try
+            {
+                DataTable dt = conexionBD.ExeStoreProcedure("sp_escuela_sel");
+                if (dt.Rows.Count > 0)
+                {
+                    respuesta.Result = from r in dt.Rows.Cast<DataRow>()
+                                       select new Escuela
+                                       {
+                                           Id = r.Field<int?>("Id"),
+                                           Clave = r.Field<string>("Clave"),
+                                           Nombre = r.Field<string>("Nombre"),
+                                           Anioregistro = r.Field<DateTime?>("AnioRegistro"),
+                                           NivelEducativo = new Catalogo(r.Field<string>("Id_Nivel_Educativo"), r.Field<string>("NivelEducativo_Desc")),
+                                           EstadoReg = new Catalogo(r.Field<string>("Cve_EstadoReg"), r.Field<string>("EstadoReg_Desc")),
+                                           FechaRegistro = r.Field<DateTime>("FechaRegistro"),
+                                           FechaModificacion = r.Field<DateTime?>("FechaModificacion"),
+                                           Usuario = new Usuario { Id = r.Field<int?>("Id_usuario") },
+                                           Contacto = new Contacto { Id = r.Field<int?>("Id_Contacto") },
+                                           Direccion = new Direccion { Id = r.Field<int?>("Id_Direccion") },
+                                       };
                 }
                 else
                     throw new Exception("algo ocurrio en la consulta, revisalo con el área de sistemas.");

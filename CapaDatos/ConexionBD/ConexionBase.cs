@@ -66,6 +66,32 @@ namespace CapaDatos.ConexionBD
                 throw new Exception(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
             }
         }
+        public DataTable ExeStoreProcedure(string Name)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                using (var cmd = Conexion.CreateCommand(Name))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandTimeout = 0;                    
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        dt.Load(dr);
+                    }
+                }
+                return dt;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+        }
         public DataSet ExeStoreProcedureDataSet(string Name, Dictionary<string, object> Parameters)
         {
             DataSet ds = new DataSet();
@@ -97,6 +123,6 @@ namespace CapaDatos.ConexionBD
             {
                 throw new Exception(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
             }
-        }
+        }        
     }
 }

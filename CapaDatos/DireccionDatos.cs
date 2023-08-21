@@ -34,7 +34,7 @@ namespace CapaDatos
                 {
                     respuesta.Result = dt.Rows[0].Field<int>(0);
                 }
-
+                
             }
             catch (Exception ex)
             {

@@ -1,9 +1,13 @@
 ﻿using Modelos.Generico;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CapaNegocio
 {
     public interface IDireccionNegocio
     {
-        RespuestaServicio<int?> Guardar(Direccion direccion);
+        Task<RespuestaServicio<int?>> Guardar(Direccion direccion);
+        RespuestaServicio<IEnumerable<DireccionGenerica>> Obtener(string CodigoPostal);
     }
+
 }

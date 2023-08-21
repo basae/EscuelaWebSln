@@ -14,34 +14,42 @@ namespace EscuelaWeb.Controllers
 {
     public class PruebasController : Controller
     {
-        private readonly EscuelaNegocio escuelaRepository;
-        private readonly DireccionNegocio direccion;
+        private readonly IEscuelaNegocio escuelaRepository;
+        private readonly IDireccionNegocio direccion;
 
-        public PruebasController(EscuelaNegocio _escuela, DireccionNegocio direccion)
+        public PruebasController(IEscuelaNegocio _escuela, IDireccionNegocio direccion)
         {
             escuelaRepository = _escuela;
             this.direccion = direccion;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var Escuelas = await escuelaRepository.Obtener();
+            if (Escuelas.Error)
+                ModelState.AddModelError("Error de Carga", Escuelas.Message);
+            return View("Index",Escuelas.Result);
 
-            //Escuela escuela = new Escuela();
-            //escuela.Clave = "ABCD123456";
-            //escuela.Nombre = "Universidad X";
-            //escuela.Telefono = "555555555";
-            //escuela.Anioregistro = new DateTime(1989, 10, 22);
-            //var colonias = direccion.Obtener("96400");
-            //escuela.Direccion.CastDireccionGenerica(colonias.Result.First());
-            //escuela.NivelEducativo = new Catalogo { Id = "4" };
-            //escuela.Direccion.Calle = "RIO MISSISIPI";
-            //escuela.Direccion.NoExt = "160";
-            
-            var respuesta = escuelaRepository.Obtener(1);
-            if (respuesta.Error)
-                return BadRequest(respuesta.Message);
-            var test = JsonConvert.SerializeObject(respuesta.Result, settings: new JsonSerializerSettings { Formatting = Formatting.Indented });
-            return View("Index",test);
-            
         }
+        public ActionResult Crear()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Crear(Escuela escuela)
+        {
+            var Respuesta = await escuelaRepository.Guardar(escuela);
+            if (Respuesta.Error)
+            {
+                ModelState.AddModelError("Error", Respuesta.Message);
+                return View("Crear", escuela);
+            }
+            return RedirectToAction("Index");
+        }
+        public JsonResult ObtenerColonias(string CodigoPostal)
+        {
+            return Json(direccion.Obtener(CodigoPostal));
+        }
+
+
     }
 }

@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CapaNegocio
+namespace Modelos.Interfaces
 {
     public static class IDireccionEtension
     {
-        public static void ValidarDatos(this Direccion direccion)
+        public static void ValidarDatos(this IDireccion direccion)
         {
             if (direccion is null)
                 throw new ArgumentNullException("objeto dirección invalido.");

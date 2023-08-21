@@ -12,24 +12,40 @@ namespace Modelos
     {
         string Amaterno { get; set; }
         string Apaterno { get; set; }
-        Direccion Direccion { get; set; }
-        DateTime FechaNacimiento { get; set; }
+        IDireccion Direccion { get; set; }
+        DateTime? FechaNacimiento { get; set; }
         Catalogo Genero { get; set; }
         string Nombre { get; set; }
-        string Telefono { get; set; }
-        string CorreoElectronico { get; set; }
+        Contacto Contacto { get; set; }
     }
 
-    public class Persona : IPersona
+    public class Persona : Contacto, IPersona
     {
         public string Nombre { get; set; }
         public string Apaterno { get; set; }
         public string Amaterno { get; set; }
-        public DateTime FechaNacimiento { get; set; }
-        public string CorreoElectronico { get; set; }
+        public DateTime? FechaNacimiento { get; set; }
         public Catalogo Genero { get; set; } = new Catalogo();
-        public string Telefono { get; set; }
-        public Direccion Direccion { get; set; } = new Direccion();
-        public Usuario Usuario { get; set; } = new Usuario();        
+        public IDireccion Direccion { get; set; } = new Direccion();
+        public Usuario Usuario { get; set; } = new Usuario();
+        public Contacto Contacto { get; set; } = new Contacto();
+    }
+    public static class IPersonaExtension
+    {
+        public static void ValidarNuevo(this IPersona persona)
+        {
+            if (persona == null)
+                throw new ArgumentNullException("es necesario llenar los datos requeridos.");
+            if (string.IsNullOrWhiteSpace(persona.Nombre))
+                throw new ArgumentNullException("nombre requerido");
+            if (string.IsNullOrWhiteSpace(persona.Apaterno))
+                throw new ArgumentNullException("apellido paterno requerido");
+            if (!persona.FechaNacimiento.HasValue)
+                throw new ArgumentNullException("fecha de nacimiento requerida");
+            if (string.IsNullOrWhiteSpace(persona.Genero.Id))
+                throw new ArgumentNullException("genero requerido");
+            persona.Contacto.ValidaContacto();
+            persona.Direccion.ValidarDatos();
+        }
     }
 }

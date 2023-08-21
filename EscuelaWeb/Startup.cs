@@ -29,17 +29,20 @@ namespace EscuelaWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
 
             services.AddSingleton<IFabricaConexion>(x => new FabricaConexion("EscuelaWebConexion", x.GetService<IConfiguration>()));
             services.AddScoped<IAdministradorConexion, AdministradorConexion>();
             services.AddScoped<IConexionBase, ConexionBase>();
             services.AddScoped<IConexionBaseTransaction, ConexionBase>();
-            
-            CargaDependenciasNegocio(services);   
-            
+
+            CargaDependenciasNegocio(services);
+
             services.AddScoped<IEscuelaDatos, EscuelaDatos>();
             services.AddScoped<IDireccionDatos, DireccionDatos>();
-                                
+            services.AddScoped<IUsuarioDatos, UsuarioDatos>();
+            services.AddScoped<IContactoDatos, ContactoDatos>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,8 +75,10 @@ namespace EscuelaWeb
 
         public void CargaDependenciasNegocio(IServiceCollection services)
         {
-            services.AddScoped<EscuelaNegocio, EscuelaNegocio>();
-            services.AddScoped<DireccionNegocio, DireccionNegocio>();
+            services.AddScoped<IEscuelaNegocio, EscuelaNegocio>();
+            services.AddScoped<IDireccionNegocio, DireccionNegocio>();
+            services.AddScoped<IUsuarioNegocio, UsuarioNegocio>();
+            services.AddScoped<IContactoNegocio, ContactoNegocio>();
         }
     }
 }
