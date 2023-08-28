@@ -19,17 +19,51 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Escuela" asp-action="Index">Escuela</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Alumno" asp-action="Index">Alumno</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Pruebas" asp-action="Index">Escuela</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuario</a>
-                        </li>
+                        @if (User.Autenticado)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" asp-area="" asp-controller="Usuario" asp-action="LogOut" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" id="menucatalogo">Catálogos</a>
+                                <div class="dropdown-menu" aria-labelledby="menucatalogo">
+                                    <a class="dropdown-item" asp-controller="" asp-action="">Grados</a>
+                                    <a class="dropdown-item" asp-controller="" asp-action="">Grupos</a>
+                                    <a class="dropdown-item" asp-controller="" asp-action="">Asignaturas</a>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Escuela" asp-action="Index">Maestros</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Escuela" asp-action="Index">Alumnos</a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" asp-area="" asp-controller="Usuario" asp-action="LogOut" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" id="menuasignaciones">Asignaciones</a>
+                                <div class="dropdown-menu" aria-labelledby="menuasignaciones">
+                                    <a class="dropdown-item" asp-controller="" asp-action="">Asignación de grupos</a>
+                                    <a class="dropdown-item" asp-controller="" asp-action="">Asignación de maestros</a>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Escuela" asp-action="Index">Calificaciones</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="LogOut">Cerrar sesión</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" >Hola @User.NombreUsuario</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Iniciar sesión</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

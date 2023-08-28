@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Modelos.Escuela>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Escuelas</h1>
+<style>
+    .table-hover {
+        font-size: 13px;
+    }
+</style>
+<div asp-validation-summary="All" class="text-danger"></div>
+<p>
+    <a asp-action="Crear">Nueva Escuela</a>
+</p>
+@if (User.Autenticado)
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Clave)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Anioregistro)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EstadoReg)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FechaRegistro)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FechaModificacion)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Clave)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Anioregistro)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EstadoReg.Descripcion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaRegistro)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaModificacion)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Detalles", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Inactivar", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

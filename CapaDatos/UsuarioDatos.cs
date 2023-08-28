@@ -18,7 +18,7 @@ namespace CapaDatos
         {
             this.conexionBase = conexionBase;
         }
-        public RespuestaServicio<int> Crear(Usuario usuario)
+        public async Task<RespuestaServicio<int>> Crear(Usuario usuario)
         {
             RespuestaServicio<int> respuesta = new();
             try
@@ -26,7 +26,7 @@ namespace CapaDatos
                 Dictionary<string, object> parametros = new();
                 parametros.Add("@NombreUsuario", usuario.NombreUsuario);
                 parametros.Add("@Contrasena", usuario.Contrasena);
-                parametros.Add("@ListaRol", conexionBase.ParseListToTable(usuario.Rols.Select(x => new { x.Id }).ToList(), new Dictionary<string, string>() { { "Id", "id_rol" } }));                
+                parametros.Add("@ListaRol", conexionBase.ParseListToTable(usuario.Rols.Select(x => new { x.Id }).ToList(), new Dictionary<string, string>() { { "Id", "id_rol" } }));
 
                 var dt = conexionBase.ExeStoreProcedure("sp_usuario_ins", parametros);
                 if (dt.Rows.Count > 0)
@@ -41,7 +41,7 @@ namespace CapaDatos
             }
             return respuesta;
         }
-        public RespuestaServicio<int> Modificar(Usuario usuario)
+        public async Task<RespuestaServicio<int>> Modificar(Usuario usuario)
         {
             RespuestaServicio<int> respuesta = new();
             try
@@ -63,7 +63,7 @@ namespace CapaDatos
             }
             return respuesta;
         }
-        public RespuestaServicio<Usuario> Obtener(int id_usaurio)
+        public async Task<RespuestaServicio<Usuario>> Obtener(int id_usaurio)
         {
             RespuestaServicio<Usuario> respuesta = new();
             try
@@ -97,16 +97,48 @@ namespace CapaDatos
             }
             return respuesta;
         }
-        public DataTable ConvertirListaRol(List<Catalogo> roles)
+        public async Task<RespuestaServicio<UsuarioLogInOut>> Login(IUsuario usuario)
         {
-            DataTable dt = new();
-            dt.Columns.Add("id_rol", typeof(int));
-
-            foreach (var item in roles)
+            return await Task.Run(() =>
             {
-                dt.Rows.Add(Convert.ToInt32(item.Id));
-            }
-            return dt;
+                RespuestaServicio<UsuarioLogInOut> respuesta = new();
+                try
+                {
+
+                    Dictionary<string, object> parametros = new();
+                    parametros.Add("@usuario", usuario.NombreUsuario);
+                    parametros.Add("@contrasena", usuario.Contrasena);
+                    var ds = conexionBase.ExeStoreProcedureDataSet("sp_usuario_sel_login", parametros);
+                    if (ds.Tables.Count == 2)
+                    {
+                        respuesta.Result = (from r in ds.Tables[0].Rows.Cast<DataRow>()
+                                            select new UsuarioLogInOut
+                                            {
+                                                Id = r.Field<int?>("Id"),
+                                                NombreUsuario = r.Field<string>("NombreUsuario"),
+                                                EstadoReg = new Catalogo { Id = r.Field<string>("Cve_EstadoReg"), Descripcion = r.Field<string>("Desc_EstadoReg") },
+                                                FechaRegistro = r.Field<DateTime>("FechaRegistro"),
+                                                FechaModificacion = r.Field<DateTime?>("FechaModificacion"),
+                                                Rols = (from r2 in ds.Tables[1].Rows.Cast<DataRow>()
+                                                        select new Catalogo
+                                                        {
+                                                            Id = r2.Field<int>("Id_Rol").ToString(),
+                                                            Descripcion = r2.Field<string>("Descripcion")
+                                                        }).ToList(),
+                                                Email= r.Field<string>("Email"),
+                                                Telefono= r.Field<string>("Telefono"),
+                                                TipoAut = (TypeAuth)r.Field<int>("TipoAut"),
+                                                Id_Entidad = r.Field<string>("Id_Entidad")
+                                            }).First();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    respuesta.Error = true;
+                    respuesta.Message = ex.Message;
+                }
+                return respuesta;
+            });
         }
     }
 }

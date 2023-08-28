@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace CapaDatos.ConexionBD
 {
@@ -11,6 +12,7 @@ namespace CapaDatos.ConexionBD
         DataTable ExeStoreProcedure(string Name, Dictionary<string, object> Parameters);
         DataTable ExeStoreProcedure(string Name);
         DataSet ExeStoreProcedureDataSet(string Name, Dictionary<string, object> Parameters);
+        //Task<DataSet> ExeStoreProcedureDataSet(string Name, Dictionary<string, object> Parameters);
         void CrearTransaccion();
         void CommitTransaccion();
         void RollBack();
@@ -44,7 +46,6 @@ namespace CapaDatos.ConexionBD
                         dt.Columns.Add(ColumnName[i.Name], i.PropertyType);
                     }
                 }
-
                 foreach (var item in items)
                 {
                     var propertyInfo = item.GetType().GetProperties().Select(x => x.GetValue(item) ?? "");

@@ -1,12 +1,14 @@
 ﻿using Modelos;
 using Modelos.Generico;
+using System.Threading.Tasks;
 
 namespace CapaDatos
 {
     public interface IUsuarioDatos
     {
-        RespuestaServicio<int> Crear(Usuario usuario);
-        RespuestaServicio<int> Modificar(Usuario usuario);
-        RespuestaServicio<Usuario> Obtener(int id_usaurio);
+        Task<RespuestaServicio<int>> Crear(Usuario usuario);
+        Task<RespuestaServicio<int>> Modificar(Usuario usuario);
+        Task<RespuestaServicio<Usuario>> Obtener(int id_usaurio);
+        Task<RespuestaServicio<UsuarioLogInOut>> Login(IUsuario usuario);
     }
 }

@@ -1,9 +1,11 @@
 ﻿using CapaDatos;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Modelos;
 using Modelos.Generico;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,7 +37,7 @@ namespace CapaNegocio
                     throw new Exception("la contraseña debe contener al menos 6 caracteres");
                 if (usuario.Rols.Count == 0)
                     throw new Exception("debe contener al menos un rol para asignación");
-                respuesta = usuarioDatos.Crear(usuario);
+                respuesta = await usuarioDatos.Crear(usuario);
             }
             catch (Exception ex)
             {
@@ -62,14 +64,34 @@ namespace CapaNegocio
             }
             return respuesta;
         }
-        public RespuestaServicio<Usuario> Obtener(int id_usuario)
+        public async Task<RespuestaServicio<Usuario>> Obtener(int id_usuario)
         {
             RespuestaServicio<Usuario> respuesta = new();
             try
             {
                 if (id_usuario < 1)
                     throw new Exception("id invalido");
-                respuesta = usuarioDatos.Obtener(id_usuario);
+                respuesta = await usuarioDatos.Obtener(id_usuario);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Error = true;
+                respuesta.Message = ex.Message;
+            }
+            return respuesta;
+        }
+        public async Task<RespuestaServicio<ClaimsPrincipal>> Login(IUsuario usuario)
+        {
+            RespuestaServicio<ClaimsPrincipal> respuesta = new();
+            try
+            {
+                usuario.Validar();
+                var RespuestaLogin = await usuarioDatos.Login(usuario);
+                if (RespuestaLogin.Error)
+                    throw new Exception(RespuestaLogin.Message);
+
+                respuesta.Result = RespuestaLogin.Result.ObtenerClaims();
+
             }
             catch (Exception ex)
             {
