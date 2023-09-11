@@ -7,17 +7,12 @@
 <h1>Create</h1>
 <h4>Alumno</h4>
 <hr />
-<style>
-    #contenedormaestro {
-        font-size: 14px;
-    }
-</style>
+<link type="text/css" href="~/css/CrearAlumno.css" rel="stylesheet" />
 <div class="row" id="contenedormaestro">
     <div class="col-md-4">
-        <form asp-action="Create" >
+        <form asp-action="Create" id="frmCrearAlumno">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
-                @*<label asp-for="NoControl" class="control-label"></label>*@
                 <label class="control-label" for="NoControl">No. de control</label>
                 <input asp-for="NoControl" class="form-control" required />
                 <span asp-validation-for="NoControl" class="text-danger"></span>
@@ -39,7 +34,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="FechaNacimiento" class="control-label"></label>
-                <input asp-for="FechaNacimiento" class="form-control" />
+                <input asp-for="FechaNacimiento" class="form-control" type="date" />
                 <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -53,8 +48,18 @@
                 <span asp-validation-for="Telefono" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label for="Genero">Genero</label>
+                <select id="Genero" asp-for="Genero" class="form-control">
+                    <option value="">Selecina tu género</option>
+                    <option value="1">Masculino</option>
+                    <option value="2">Femenino</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Crear Registro" class="btn btn-primary" />
             </div>
+
+
         </form>
     </div>
     <div class="col-md-4">
@@ -66,9 +71,10 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Regresar</a>
 </div>
 
 @section Scripts {
+    <script src="~/js/CrearAlumno.js"></script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

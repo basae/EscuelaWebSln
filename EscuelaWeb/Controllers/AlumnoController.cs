@@ -37,8 +37,11 @@ namespace EscuelaWeb.Controllers
         {
             try
             {
-                throw new Exception("error controlado");
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    return RedirectToAction(nameof(Index));                    
+                }
+                return View(nameof(Create));
             }
             catch
             {

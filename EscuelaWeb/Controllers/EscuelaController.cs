@@ -27,10 +27,10 @@ namespace EscuelaWeb.Controllers
         //[HttpGet] SOLO SE UTILIZA PARA CONSULTA DE INFORMACION (VISUALIZAR PAGINA)
         //[HttpPost] SOLO SE UTILIZA PARA ENVIAR INFORMACION EN MODELOS DE DATOS()
         //[HttpPut] SOLO SE DEBE UTILIZAR PARA ACTUALIZAR DATOS
-        //[HttpDelete] SOLO ES PARA ELMINAR INFORMACION (DEPENDED LA LOGICA PUEDE SER ELIMINACION LOGICA O FISICA)
+        //[HttpDelete] SOLO ES PARA ELMINAR INFORMACION (DEPENDED LA LOGICA PUEDE SER ELIMINACION LOGICA O FISICA)       
         public async Task<IActionResult> Index()
         {
-            List<Escuela> Escuelas = new();
+            List<Escuela> Escuelas = new();            
             if (User.Autenticado)
             {
                 switch (User.TipoAut)
@@ -52,9 +52,10 @@ namespace EscuelaWeb.Controllers
             return View("Index", Escuelas);
 
 
-        }
+        }        
         public ActionResult Crear()
         {
+            
             return View();
         }
         [HttpPost]

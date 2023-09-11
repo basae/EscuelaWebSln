@@ -21,11 +21,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Escuela" asp-action="Index">Escuela</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Alumno" asp-action="Index">Alumno</a>
-                        </li>
                         @if (User.Autenticado)
                         {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Alumno" asp-action="Index">Alumno</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" asp-area="" asp-controller="Usuario" asp-action="LogOut" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" id="menucatalogo">Catálogos</a>
                                 <div class="dropdown-menu" aria-labelledby="menucatalogo">
@@ -55,7 +55,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="LogOut">Cerrar sesión</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" >Hola @User.NombreUsuario</a>
+                                <a class="nav-link text-dark">Hola @User.NombreUsuario</a>
                             </li>
                         }
                         else

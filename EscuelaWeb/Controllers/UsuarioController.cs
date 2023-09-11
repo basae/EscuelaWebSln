@@ -23,7 +23,6 @@ namespace EscuelaWeb.Controllers
         {
             this.usuarioNegocio = usuarioNegocio;
         }
-
         public ActionResult Index(string ReturnUrl = null)
         {
             TempData["ReturnUrl"] = ReturnUrl;
